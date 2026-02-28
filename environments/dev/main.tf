@@ -30,7 +30,7 @@ variable "github_repo" {
 # --- DEPLOY COMPUTE STACK TO US-EAST-1 ---
 module "compute_us_east_1" {
   source = "../../modules/compute-stack"
-  
+
   providers = {
     aws = aws.us_east_1
   }
@@ -44,7 +44,7 @@ module "compute_us_east_1" {
 # --- DEPLOY COMPUTE STACK TO EU-WEST-1 ---
 module "compute_eu_west_1" {
   source = "../../modules/compute-stack"
-  
+
   providers = {
     aws = aws.eu_west_1
   }

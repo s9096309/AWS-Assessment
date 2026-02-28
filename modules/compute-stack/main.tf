@@ -1,8 +1,8 @@
 # --- DYNAMODB ---
 resource "aws_dynamodb_table" "greeting_logs" {
-  name           = "GreetingLogs"
-  billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "id"
+  name         = "GreetingLogs"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "id"
 
   attribute {
     name = "id"
@@ -17,8 +17,8 @@ resource "aws_iam_role" "lambda_greeter_role" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
+      Action    = "sts:AssumeRole"
+      Effect    = "Allow"
       Principal = { Service = "lambda.amazonaws.com" }
     }]
   })
@@ -63,19 +63,19 @@ data "archive_file" "greeter_zip" {
 # --- LAMBDA 1 (THE GREETER) ---
 resource "aws_lambda_function" "greeter" {
   function_name = "unleash-greeter-${data.aws_region.current.name}"
-  
+
   # Attach IAM role created in previous step
-  role          = aws_iam_role.lambda_greeter_role.arn
-  
-  handler       = "greeter.lambda_handler"
-  runtime       = "python3.12"
-  
+  role = aws_iam_role.lambda_greeter_role.arn
+
+  handler = "greeter.lambda_handler"
+  runtime = "python3.12"
+
   # Reference zipped payload
   filename         = data.archive_file.greeter_zip.output_path
   source_code_hash = data.archive_file.greeter_zip.output_base64sha256
-  
+
   # keep timeouts short
-  timeout       = 10
+  timeout = 10
 
   # Inject environment variables expected by the Python script
   environment {
@@ -92,7 +92,7 @@ resource "aws_lambda_function" "greeter" {
 resource "aws_iam_role" "lambda_dispatcher_role" {
   name = "lambda-dispatcher-role-${data.aws_region.current.name}"
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
+    Version   = "2012-10-17"
     Statement = [{ Action = "sts:AssumeRole", Effect = "Allow", Principal = { Service = "lambda.amazonaws.com" } }]
   })
 }
@@ -109,8 +109,8 @@ resource "aws_iam_role_policy" "lambda_dispatcher_policy" {
         Resource = "arn:aws:logs:*:*:*"
       },
       {
-        Action   = ["ecs:RunTask"]
-        Effect   = "Allow"
+        Action = ["ecs:RunTask"]
+        Effect = "Allow"
         # Append a wildcard so IAM allows execution of any revision (e.g., :1, :2, etc.)
         Resource = "${aws_ecs_task_definition.sns_task.arn_without_revision}:*"
       },

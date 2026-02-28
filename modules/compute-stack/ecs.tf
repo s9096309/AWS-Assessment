@@ -3,7 +3,7 @@ resource "aws_vpc" "ecs_vpc" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
-  tags = { Name = "ecs-vpc-${data.aws_region.current.name}" }
+  tags                 = { Name = "ecs-vpc-${data.aws_region.current.name}" }
 }
 
 resource "aws_internet_gateway" "igw" {
@@ -54,7 +54,7 @@ resource "aws_ecs_cluster" "cluster" {
 resource "aws_iam_role" "ecs_execution_role" {
   name = "ecs-exec-role-${data.aws_region.current.name}"
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
+    Version   = "2012-10-17"
     Statement = [{ Action = "sts:AssumeRole", Effect = "Allow", Principal = { Service = "ecs-tasks.amazonaws.com" } }]
   })
 }
@@ -68,7 +68,7 @@ resource "aws_iam_role_policy_attachment" "ecs_execution_policy" {
 resource "aws_iam_role" "ecs_task_role" {
   name = "ecs-task-role-${data.aws_region.current.name}"
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
+    Version   = "2012-10-17"
     Statement = [{ Action = "sts:AssumeRole", Effect = "Allow", Principal = { Service = "ecs-tasks.amazonaws.com" } }]
   })
 }

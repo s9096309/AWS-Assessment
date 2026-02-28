@@ -21,7 +21,7 @@ resource "aws_cognito_user_pool_client" "client" {
   user_pool_id = aws_cognito_user_pool.pool.id
 
   generate_secret = false
-  
+
   # Flows to allow easy login via script
   explicit_auth_flows = [
     "ALLOW_USER_PASSWORD_AUTH",
