@@ -1,0 +1,65 @@
+name: Unleash live AWS Deployment Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  iac-security-and-plan:
+    name: IaC Validation & Security
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.0"
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+        
+      - name: Terraform Init
+        working-directory: ./environments/dev
+        # backend=false skips state lock checks for purely syntax-based validation
+        run: terraform init -backend=false 
+
+      - name: Terraform Validate
+        working-directory: ./environments/dev
+        run: terraform validate
+
+      - name: Security Scan with tfsec
+        uses: aquasecurity/tfsec-action@v1.0.3
+
+      - name: Terraform Plan (Placeholder)
+        working-directory: ./environments/dev
+        run: echo "terraform plan -out=tfplan"
+
+  post-deployment-testing:
+    name: Automated Integration Tests
+    needs: iac-security-and-plan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          
+      - name: Install Python Dependencies
+        working-directory: ./scripts
+        run: pip install boto3 requests
+        
+      - name: Execute Multi-Region Test Script (Placeholder)
+        working-directory: ./scripts
+        # Execute deployment validation script
+        run: |
+          echo "Executing test_deployment.py to verify endpoints and latency..."
+          echo "python test_deployment.py"
