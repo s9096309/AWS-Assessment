@@ -1,15 +1,22 @@
 import time
+import os
 import requests
 import boto3
 import concurrent.futures
 
-# --- CONFIGURATION ---
+# --- CONFIGURATION (READ FROM ENVIRONMENT) ---
+# Set these in your terminal before running: 
+# export TEST_PASSWORD="your-password"
 EMAIL = "k-hoff-mann@web.de"
-PASSWORD = "Unleash!2026"
+PASSWORD = os.getenv("TEST_PASSWORD") 
 
-CLIENT_ID = "5orv8m556499e6er7a27kgust8"
-API_URL_US = "https://emp0098aud.execute-api.us-east-1.amazonaws.com"
-API_URL_EU = "https://0sm3p48jtl.execute-api.eu-west-1.amazonaws.com"
+if not PASSWORD:
+    print("Error: Please set the TEST_PASSWORD environment variable.")
+    exit(1)
+
+CLIENT_ID = "36mt4qdm70ccep15cu1ufgdhoc"
+API_URL_US = "https://jn45v0fp3i.execute-api.us-east-1.amazonaws.com"
+API_URL_EU = "https://me19b2bkg1.execute-api.eu-west-1.amazonaws.com"
 
 # --- 1. AUTHENTICATE WITH COGNITO ---
 def get_jwt_token():
