@@ -14,8 +14,8 @@ This project provisions a highly available, multi-region compute stack across **
 * **Centralized Identity:** A single Amazon Cognito User Pool in `us-east-1` providing JWT-based authentication for both regions.
 * **API Layer:** Amazon API Gateway (HTTP) with a JWT Authorizer.
 * **Serverless Compute:**
-    * **Lambda 1 (The Greeter):** Logs metadata to a regional DynamoDB table and publishes a verification payload to the Unleash live SNS Topic.
-    * **Lambda 2 (The Dispatcher):** Programmatically triggers an ECS Fargate Task.
+    * **Lambda 1 (Greeter):** Logs metadata to a regional DynamoDB table and publishes a verification payload to the Unleash live SNS Topic.
+    * **Lambda 2 (Dispatcher):** Programmatically triggers an ECS Fargate Task.
 * **Containerized Compute:** (ECS Fargate Task): Runs a lightweight container using the AWS CLI to publish a secondary verification payload to the SNS Topic.
 * **Storage:** Regional DynamoDB tables for localized greeting logs.
 
@@ -63,7 +63,7 @@ Because Cognito users are created with a temporary status, you must confirm the 
 ```bash
 aws cognito-idp admin-set-user-password \
   --user-pool-id "$(terraform output -raw cognito_user_pool_id)" \
-  --username "k-hoff-mann@web.de" \
+  --username "YOUR_CHOSEN_USERNAME" \
   --password 'YOUR_CHOSEN_PASSWORD' \
   --permanent \
   --region us-east-1
